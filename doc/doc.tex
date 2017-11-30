@@ -1,0 +1,30 @@
+\documentclass[a4paper,german]{report}
+    
+    \title{Projekt Medieninformatik}
+    \date{WS17/18}
+    \author{Lewe Ohlsen\\ Fachhochschule Wedel}
+    
+    \usepackage[utf8]{inputenc}                   % latin9 utf8
+    \usepackage[german]{babel}
+    \usepackage{tikz}
+    \usepackage{pgfgantt}
+
+    \begin{document}
+        \maketitle
+            \section{Section Headings}
+            \begin{ganttchart}{1}{16}
+                \gantttitle{Kalenderwoche}{16} \\
+                \gantttitlelist{46,...,52,1,2,3,4,5,6,7,8,9}{1} \\
+                
+                \ganttbar{MNIST Tutorial}{1}{2} \\
+                \ganttlinkedbar{Datenaufbereitung}{3}{3} \\
+                \ganttbar{CNN-Inplementierung}{3}{9} \\                
+                
+                %\ganttlinkedbar{Task 2}{3}{7} \ganttnewline
+                \ganttmilestone{Webcam-Input}{7} \ganttnewline
+                \ganttbar{Final Task}{8}{12}
+                
+                %\ganttlink{elem1}{elem2}            
+                
+            \end{ganttchart}
+    \end{document}
