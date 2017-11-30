@@ -1,0 +1,7 @@
+doc/*
+!doc/doc.tex
+!doc/fer2013.bib
+
+fer2013.csv
+
+.ipynb_checkpoints/
