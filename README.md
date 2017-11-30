@@ -3,6 +3,4 @@
 In order to be able to run the notebook, please [download the dataset from kaggle](https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data)
 and untar the csv into the project root
 
-    tar -xzf fer2013.tar
-
 
