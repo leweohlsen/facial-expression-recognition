@@ -1,28 +1,33 @@
-\documentclass[a4paper,german]{report}
+\documentclass[a4paper,english]{report}
     
-    \title{Projekt Medieninformatik}
+    \title{Projekt Medieninformatik\\Facial Expresson Recognition Using A State Of The Art CNN}
     \date{WS17/18}
     \author{Lewe Ohlsen\\ Fachhochschule Wedel}
     
     \usepackage[utf8]{inputenc}                   % latin9 utf8
-    \usepackage[german]{babel}
     \usepackage{tikz}
     \usepackage{pgfgantt}
 
     \begin{document}
         \maketitle
-            \section{Section Headings}
+        \newpage
+            \tableofcontents
+        \newpage
+        \section{Introduction}
+            In order to get started with deep learning techniques and state of the art neural networks, I am participating in a 2013 kaggle competition on image classification.
+        \section{Roadmap}
             \begin{ganttchart}{1}{16}
                 \gantttitle{Kalenderwoche}{16} \\
                 \gantttitlelist{46,...,52,1,2,3,4,5,6,7,8,9}{1} \\
                 
                 \ganttbar{MNIST Tutorial}{1}{2} \\
-                \ganttlinkedbar{Datenaufbereitung}{3}{3} \\
-                \ganttbar{CNN-Inplementierung}{3}{9} \\                
+                \ganttlinkedbar{Data preparation}{3}{3} \\
+                \ganttbar{implementing a simple linear model}{3}{4} \\                                
+                \ganttlinkedbar{implementing a CNN}{4}{10} \\                
                 
                 %\ganttlinkedbar{Task 2}{3}{7} \ganttnewline
-                \ganttmilestone{Webcam-Input}{7} \ganttnewline
-                \ganttbar{Final Task}{8}{12}
+                \ganttmilestone{processing Webcam images}{8} \ganttnewline
+                \ganttlinkedbar{Tuning parameters}{10}{12}
                 
                 %\ganttlink{elem1}{elem2}            
                 
