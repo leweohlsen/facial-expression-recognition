@@ -1,10 +1,11 @@
 \documentclass[a4paper,english]{report}
     
-    \title{Projekt Medieninformatik\\Facial Expresson Recognition Using A State Of The Art CNN}
+    \title{Projekt Medieninformatik\\Facial Expresson Recognition\\ Using A State Of The Art CNN}
     \date{WS17/18}
     \author{Lewe Ohlsen\\ Fachhochschule Wedel}
     
-    \usepackage[utf8]{inputenc}                   % latin9 utf8
+    \usepackage[utf8]{inputenc}  
+    \usepackage[inline]{enumitem}
     \usepackage{tikz}
     \usepackage{pgfgantt}
 
@@ -14,10 +15,10 @@
             \tableofcontents
         \newpage
         \section{Introduction}
-            In order to get started with deep learning techniques and state of the art neural networks, I am participating in a 2013 kaggle competition on image classification.
+            In order to get started with deep learning techniques and state of the art neural networks, I am participating in a Facial Expression Recognition Challenge\footnote{https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data} on Kaggle. The goal is to build a classifier for facial expression recognition on live images.
         \section{Roadmap}
             \begin{ganttchart}{1}{16}
-                \gantttitle{Kalenderwoche}{16} \\
+                \gantttitle{Calendar Week}{16} \\
                 \gantttitlelist{46,...,52,1,2,3,4,5,6,7,8,9}{1} \\
                 
                 \ganttbar{MNIST Tutorial}{1}{2} \\
@@ -32,4 +33,28 @@
                 %\ganttlink{elem1}{elem2}            
                 
             \end{ganttchart}
+        \chapter{About the Dataset}
+        The Dataset consists of 48x48 pixel grayscale images of faces. The faces have been centered automatically do not require further preprocessing.
+        The Dataset is initially being split into two subsets: The model is first trained to fit the training data and subsequently evaluated using the test dataset.
+        
+        % \begin{enumerate*}[label=(\roman*)]
+        %     \item Training,\label{item:training}
+        %     \item PublicTest and\label{item:pubtest}
+        %     \item PrivateTest.\label{item:prvtest}
+        % \end{enumerate*}\\
+        % \ref{item:training} Dogs are very nice animals. However they need to be walked several times a day\ldots [continuous long passage spreading over multiple lines]\\
+        % \ref{item:pubtest} Cats are often considered easier animals but\\
+        % \ref{item:prvtest} Cats are often considered easier animals but\ldots
+
+        \chapter{Feedforward Neural Networks}
+        \section{Perceptrons}
+        \section{Cost Function}
+        \section{Optimizers}
+        \section{Gradient Descend}
+        \section{Backpropagation}        
+        \chapter{Convolutional Neural Networks}
+        \section{Convolutions}
+        \section{Filters}
+        \section{Layers and Dropouts}
+        \chapter{Processing Live Images}
     \end{document}
