@@ -1,5 +1,7 @@
 import face_recognition
 import cv2
+import numpy as np
+import predict
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -14,6 +16,7 @@ import cv2
 video_capture = cv2.VideoCapture(0)
 
 # Initialize some variables
+class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 face_locations = []
 face_encodings = []
 face_emotions = []
@@ -43,12 +46,18 @@ while True:
             bottom *= 4
             left *= 4
             # See if we can find out the facial expression
-            emotion = "Unknown"
-            # Write image to disk
-            face_image = frame[top:bottom, left:right]
-            cv2.imwrite("face%04i.jpg" %frame_count, face_image)
 
-            face_emotions.append(emotion)
+            face_image_rgb = frame[top:bottom, left:right]
+            face_image_gs = cv2.cvtColor(face_image_rgb, cv2.COLOR_BGR2GRAY)
+            face_image_gs_resized = cv2.resize(face_image_gs, (48, 48)) 
+            
+
+            img_byte = np.array(face_image_gs_resized, dtype=np.float32)
+            img = np.divide(img_byte, 255)
+
+            pred_class = predict.predictEmotion(img)
+
+            face_emotions.append(class_labels[pred_class])
 
 
     # Display the results
