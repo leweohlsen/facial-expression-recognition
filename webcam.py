@@ -40,11 +40,12 @@ while True:
 
         face_emotions = []
         for (top, right, bottom, left) in face_locations:
-            # Sacle face locations back up
+            # Scale face locations back up
             top *= 4
             right *= 4
             bottom *= 4
             left *= 4
+            
             # See if we can find out the facial expression
 
             face_image_rgb = frame[top:bottom, left:right]

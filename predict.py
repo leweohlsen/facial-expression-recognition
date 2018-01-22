@@ -54,8 +54,13 @@ def conv_net(x_dict, n_classes, dropout, reuse, is_training):
         # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
         conv3 = tf.layers.max_pooling2d(conv3, 2, 2)
 
+        # Convolution Layer with 256 filters and a kernel size of 3
+        conv4 = tf.layers.conv2d(conv3, 256, 3, activation=tf.nn.relu)
+        # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
+        conv4 = tf.layers.max_pooling2d(conv4, 2, 2)
+
         # Flatten the data to a 1-D vector for the fully connected layer
-        fc1 = tf.contrib.layers.flatten(conv3)
+        fc1 = tf.contrib.layers.flatten(conv4)
 
         # Fully connected layer (in tf contrib folder for now)
         fc1 = tf.layers.dense(fc1, 1024)
@@ -117,7 +122,5 @@ def predictEmotion(img):
     # Use the model to predict the images class
     preds = list(model.predict(input_fn))
 
-    print(preds)
+    print(preds, " -> ", class_labels[preds[0]])
     return preds[0]
-
-predictEmotion(imgs_test)

@@ -43,25 +43,34 @@
         
         The Dataset consists of 48x48 pixel grayscale images of faces. 
         These images have been centered automatically to show a similar 
-        region of the face in every sample. All the images come classified
-        with the facial expression visible.
-        % TODO: explain what a model is
-        Initially the dataset is split into two subsets: A training set 
-        that is used to fit the model and a test set to evaluate the model
-        and see how well it performs.
+        region of the face in every sample. All the images are classified
+        with the vibible facial expression.
+\\\\
+Initially, the dataset is split into two subsets: A training set 
+        that is used to fit the prediction and a test set to evaluate the prediction results
+and compute the generalization error. The generalisation error is the average error for data that the model has never seen (e.g live webcam images).
 
-        Figure of classes and distribution…
+
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.6\textwidth]{figures/class_dist.png}
+            \caption{Class distribution across the training dataset}
+            \label{fig:classdist}
+        \end{figure}
+        
         
         \chapter{Challenges}
         \section{Recognizing Faces}
         \section{Classifying Facial Expressions}
         \chapter{Feedforward Neural Networks}
-        A feedforward neural network can be thought of as a function f(x) = y
-        where x is a fixed-size vector that represents the input data. In this
-        case, the image is represented as a … dimensional vector, each component
+        A feedforward neural network can be thought of as a prediction function f(x) = y where x is a fixed-size vector that represents the input data. In this
+        case, the image is represented as a 2304-dimensional vector, each component
         being the grayscale intensity of a pixel [0..1]. y is a 7-dimensional vector,
         each component representing the computed probability of the image belonging 
         to a certain class. The function f is actually a computational graph (DAG)…
+        
+        The flow of information is uni-directional and not cyclic.
 
         \section{Perceptrons}
 
@@ -72,6 +81,20 @@
         \section{Backpropagation}        
         \chapter{Convolutional Neural Networks}
         \section{Convolutions}
+    	\section{Pooling}
+    	Downsampling the image or hidden-layer output matrix and providing an abstracted form of the representation. This allows for assumptions to be made about features contained in the sub-regions of the image.
+    	
+    	Max-pooling e.g a 2x2 filter running over the image with a stride of 2 and taking the max value for each position.
+    	
+   		\begin{figure}[h]
+    		\centering
+    		\includegraphics[width=0.6\textwidth]{figures/max_pooling.png}
+    		\caption{Max-pooling a 4x4-pixels image with a 2x2 filter and a stride of 2}
+    		\label{fig:maxpooling}
+    	\end{figure}
+    	
+    	(Source: Stanford's CS231n github)
+    	
         \section{Filters}
         \section{Layers and Dropouts}
         \chapter{Processing Live Images}
