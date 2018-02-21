@@ -16,7 +16,7 @@ frame_count = 0
 process_every_n_frames = 10
 
 while True:
-    # Grab a single frame of video
+    # Grab a single frame of the video
     ret, frame = webcam.read()
 
     # Resize frame of video to 1/4 size for faster face recognition processing
@@ -36,17 +36,14 @@ while True:
         face_emotions = []
         for (x, y, w, h) in faces:
 
-            print( x, y, w, h)
+            print(x, y, w, h)
 
             face = frame_resized_gray[y:y+h, x:x+w]
             face_input = cv2.resize(face, (48, 48))
             face_input_byte = np.array(face_input, dtype=np.float32)
             face_input_intensity = np.divide(face_input_byte, 255)
 
-            print(face_input)
-
             pred_class = predict.predictEmotion(face_input_intensity)
-
             face_emotions.append(class_labels[pred_class])
 
 
