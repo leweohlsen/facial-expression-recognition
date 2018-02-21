@@ -13,20 +13,6 @@ num_classes = 7
 class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 dropout = 0.25
 
-imgs_test_byte = []
-
-with open('fer2013.csv') as csvfile:
-    readCSV = csv.reader(csvfile, delimiter=',')
-    # skip CSV header
-    next(readCSV)
-    for row in readCSV:
-        if row[2] == 'PrivateTest':
-            pixels_test = [float(x) for x in row[1].split(' ')]
-            imgs_test_byte.append(np.array(pixels_test))
-
-imgs_test_byte = np.array(imgs_test_byte, dtype=np.float32)
-imgs_test = np.divide(imgs_test_byte, 255)
-
 def conv_net(x_dict, n_classes, dropout, reuse, is_training):
     
     # Define a scope for reusing the variables
