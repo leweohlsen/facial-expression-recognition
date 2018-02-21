@@ -73,5 +73,5 @@ while True:
         break
 
 # Release handle to the webcam
-video_capture.release()
+webcam.release()
 cv2.destroyAllWindows()
