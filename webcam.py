@@ -20,38 +20,43 @@ while True:
     ret, frame = webcam.read()
 
     # Resize frame of video to 1/4 size for faster face recognition processing
-    # frame_resized = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+    frame_resized = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     # Only process every other frame of video to save time
     if frame_count % process_every_n_frames == 0:
 
         # convert image to grayscale
-        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        frame_resized_gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)
 
         # Find all the faces in the current frame of video
-        faces = face_cascade.detectMultiScale(frame_gray, 1.1, 5)
+        faces = face_cascade.detectMultiScale(frame_resized_gray, 1.1, 5)
 
         print('Faces found: ', len(faces))
 
         face_emotions = []
         for (x, y, w, h) in faces:
+
             print( x, y, w, h)
 
-            face_rgb = frame[y:y+h, x:x+w]
-            face_gs = cv2.cvtColor(face_rgb, cv2.COLOR_BGR2GRAY)
-            face_gs_resized = cv2.resize(face_gs, (48, 48))
-            
+            face = frame_resized_gray[y:y+h, x:x+w]
+            face_input = cv2.resize(face, (48, 48))
+            face_input_byte = np.array(face_input, dtype=np.float32)
+            face_input_intensity = np.divide(face_input_byte, 255)
 
-            img_byte = np.array(face_gs_resized, dtype=np.float32)
-            img = np.divide(img_byte, 255)
+            print(face_input)
 
-            pred_class = predict.predictEmotion(img)
+            pred_class = predict.predictEmotion(face_input_intensity)
 
             face_emotions.append(class_labels[pred_class])
 
 
     # Display the results
     for (x, y, w, h), name in zip(faces, face_emotions):
+
+        x *= 4
+        y *= 4
+        w*= 4
+        h *= 4
 
         # Draw a box around the face
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),2)
