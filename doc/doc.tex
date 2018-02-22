@@ -14,14 +14,20 @@
         \newpage
             \tableofcontents
         \newpage
-        \section{Introduction}
+        
+		        
+        
+        \section{Abstract}
+            Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction (HCI).
             The projects goal is to build a device to process live webcam
             images, detect faces and classify the emotion of each face.
             In order to get started with deep learning techniques and state 
             of the art neural networks, I am participating in a Facial 
             Expression Recognition 
             Challenge\footnote{https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data} 
-            on Kaggle. 
+            on Kaggle.
+            
+            As Convolutional Neural Networks (CNNs) have proven to be successful with many kinds of image classification  problems, I will focus on building a classifier using a state of the art CNN implementation.
         \section{Roadmap}
             \begin{ganttchart}{1}{16}
                 \gantttitle{Calendar Week}{16} \\
@@ -43,12 +49,11 @@
         
         The Dataset consists of 48x48 pixel grayscale images of faces. 
         These images have been centered automatically to show a similar 
-        region of the face in every sample. All the images are classified
-        with the vibible facial expression.
-\\\\
-Initially, the dataset is split into two subsets: A training set 
-        that is used to fit the prediction and a test set to evaluate the prediction results
-and compute the generalization error. The generalisation error is the average error for data that the model has never seen (e.g live webcam images).
+        region of the face in every sample. All the images are labeled
+        with the visible facial expression according to Ekmans (…) face classification (1970s).
+        
+        Initially, the dataset is split into two subsets: A training set 
+        that is used to fit the prediction and a test set to evaluate the prediction results and compute the generalization error. The generalisation error is the average error for data that the model has never seen (e.g live webcam images).
 
 
 
@@ -80,6 +85,7 @@ and compute the generalization error. The generalisation error is the average er
         \section{Gradient Descend}
         \section{Backpropagation}        
         \chapter{Convolutional Neural Networks}
+        %\section{Feature Extraction}
         \section{Convolutions}
     	\section{Pooling}
     	Downsampling the image or hidden-layer output matrix and providing an abstracted form of the representation. This allows for assumptions to be made about features contained in the sub-regions of the image.
