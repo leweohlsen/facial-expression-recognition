@@ -1,6 +1,7 @@
 __pycache__
 logs
 doc/*
+!doc/paper.tex
 !doc/doc.tex
 !doc/fer2013.bib
 
