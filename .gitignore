@@ -4,6 +4,7 @@ doc/*
 !doc/paper.tex
 !doc/doc.tex
 !doc/fer2013.bib
+!doc/figures/
 
 fer2013.csv
 
