@@ -13,7 +13,7 @@ labels_train_class = []
 labels_test_class = []
 
 
-with open('fer2013.csv') as csvfile:
+with open('data/fer2013.csv') as csvfile:
     readCSV = csv.reader(csvfile, delimiter=',')
     # skip CSV header
     next(readCSV)
@@ -40,7 +40,7 @@ imgs_test = np.divide(imgs_test_byte, 255)
 
 
 # Build the Estimator
-estimator = tf.estimator.Estimator(model_fn=model.model_fn, model_dir='../model')
+estimator = tf.estimator.Estimator(model_fn=model.model_fn, model_dir='./model')
 
 
 # Training
