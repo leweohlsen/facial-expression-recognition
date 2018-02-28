@@ -16,6 +16,8 @@ num_steps = 20000
 batch_size = 128
 dropout = 0.25
 
+# Enable logging
+tf.logging.set_verbosity(tf.logging.INFO)
 
 def conv_net(x_dict, n_classes, dropout, reuse, is_training):
     
@@ -30,24 +32,29 @@ def conv_net(x_dict, n_classes, dropout, reuse, is_training):
         x = tf.reshape(x, shape=[-1, img_size, img_size, 1])
 
         # Convolution Layer with 32 filters and a kernel size of 5
-        conv1 = tf.layers.conv2d(x, 32, 5, activation=tf.nn.relu)
+        conv1 = tf.layers.conv2d(x, 32, 5, padding='same', activation=tf.nn.relu)
         # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
         conv1 = tf.layers.max_pooling2d(conv1, 2, 2)
 
         # Convolution Layer with 64 filters and a kernel size of 3
-        conv2 = tf.layers.conv2d(conv1, 64, 3, activation=tf.nn.relu)
+        conv2 = tf.layers.conv2d(conv1, 64, 3, padding='same', activation=tf.nn.relu)
         # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
         conv2 = tf.layers.max_pooling2d(conv2, 2, 2)
         
         # Convolution Layer with 128 filters and a kernel size of 3
-        conv3 = tf.layers.conv2d(conv2, 128, 3, activation=tf.nn.relu)
+        conv3 = tf.layers.conv2d(conv2, 128, 3, padding='same', activation=tf.nn.relu)
         # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
         conv3 = tf.layers.max_pooling2d(conv3, 2, 2)
 
         # Convolution Layer with 256 filters and a kernel size of 3
-        conv4 = tf.layers.conv2d(conv3, 256, 3, activation=tf.nn.relu)
+        conv4 = tf.layers.conv2d(conv3, 256, 3, padding='same', activation=tf.nn.relu)
         # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
         conv4 = tf.layers.max_pooling2d(conv4, 2, 2)
+
+        # Convolution Layer with 256 filters and a kernel size of 3
+        conv5 = tf.layers.conv2d(conv4, 256, 3, padding='same', activation=tf.nn.relu)
+        # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
+        conv5 = tf.layers.max_pooling2d(conv5, 2, 2)
 
         # Flatten the data to a 1-D vector for the fully connected layer
         fc1 = tf.contrib.layers.flatten(conv4)
@@ -87,6 +94,10 @@ def model_fn(features, labels, mode):
     
     # Evaluate the accuracy of the model
     acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
+
+    # Write summary for tensorboard
+    tf.summary.scalar("loss", loss_op)
+    tf.summary.scalar("accuracy", acc_op)
     
     # TF Estimators requires to return a EstimatorSpec, that specify
     # the different ops for training, evaluating, ...
