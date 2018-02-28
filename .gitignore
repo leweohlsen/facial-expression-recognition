@@ -1,5 +1,6 @@
 __pycache__
 logs
+data
 doc/*
 !doc/paper.tex
 !doc/doc.tex
