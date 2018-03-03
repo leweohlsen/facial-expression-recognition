@@ -7,10 +7,11 @@ class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral
 # Build the Estimator
 estimator = tf.estimator.Estimator(
     model_fn=model.model_fn, 
-    model_dir='./model',
+    model_dir='./model/ckplus',
     params={
         'learning_rate': 0.001,
         'num_classes': 7,
+        'img_size': 128,
         'dropout_rate': 0.25
     })
 
