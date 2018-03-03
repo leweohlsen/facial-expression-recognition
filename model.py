@@ -21,6 +21,8 @@ def conv_net(x_dict, n_classes, dropout, reuse, is_training):
         # Tensor input become 4-D: [Batch Size, Height, Width, Channel]
         x = tf.reshape(x, shape=[-1, img_size, img_size, 1])
 
+        tf.summary.image("img", x)
+
         # Convolution Layer with 32 filters and a kernel size of 5
         conv1 = tf.layers.conv2d(x, 32, 5, padding='same', activation=tf.nn.relu)
         # Max Pooling (down-sampling) with strides of 2 and kernel size of 2
@@ -86,8 +88,8 @@ def model_fn(features, labels, mode, params):
     acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
 
     # TODO: Write summary for tensorboard
-    # tf.summary.scalar("loss", loss_op)
-    # tf.summary.scalar("accuracy", acc_op)
+    tf.summary.scalar("loss", loss_op)
+    tf.summary.scalar("accuracy", acc_op[0])
     
     # TF Estimators requires to return a EstimatorSpec, that specify
     # the different ops for training, evaluating, ...
