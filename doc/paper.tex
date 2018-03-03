@@ -92,7 +92,7 @@ As Convolutional Neural Networks (CNNs) have proven to be successful with many k
 
 \section{Datasets}
 
-Paul Ekmans 1969 research paper "Facial Expressions" elaborates that facial expressions can be interpreted and categorized into six classes of basic emotion that can be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise. In this project, these classes are used for training and predictions.
+Paul Ekmans 1969 research paper "Facial Expressions" (REF) elaborates that facial expressions can be interpreted and categorized into six classes of basic emotion that can be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise. In this project, these classes are used for training and predictions.
 
 To build a classifier for facial expressions, a dataset with labeled images of faces is required. Each of the datasets is split into two subsets: A training set that is used to fit the prediction and a test set to evaluate the prediction results.
 
@@ -108,9 +108,9 @@ The FER-2013 Dataset consists of roughly 37.000 images showing faces of people e
 \end{figure}
 
 \subsection{Cohn-Kanade (CK+)}
-To argument the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. CK+ consists of 593 image sequences across 123 subjects. Each image sequence goes from the neutral face to a "peak expression" according to the six basic emotions.
+To argument the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. The Cohn-Kanade (CK+) dataset consists of 593 image sequences across 123 subjects. Each image sequence goes from a neutral facial expression to a "peak expression" according to the six basic emotions. Because only 327 of the 593 image sequences are labeled with emotion data. This is because not all images fit the prototypic definition of the Facial Action Coding System (FACS) according to Ekman et al. CK+ also contains FACS data, in which action units (e.g raised eyebrow) are identified along with their degree of activation.
 
-
+Figure of CK+ distribution with neutral images.
 
 
 %------------------------------------------------
