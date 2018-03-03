@@ -1,15 +1,9 @@
 import tensorflow as tf
 
-
-# Image dimensions
-img_size = 48
-img_size_flat = img_size * img_size
-img_shape = (img_size, img_size)
-
 # Enable logging
 tf.logging.set_verbosity(tf.logging.INFO)
 
-def conv_net(x_dict, n_classes, dropout, reuse, is_training):
+def conv_net(x_dict, n_classes, img_size, dropout, reuse, is_training):
     
     # Define a scope for reusing the variables
     with tf.variable_scope('ConvNet', reuse=reuse):
@@ -67,8 +61,8 @@ def model_fn(features, labels, mode, params):
     # Build the neural network
     # Because Dropout have different behavior at training and prediction time, we
     # need to create 2 distinct computation graphs that still share the same weights.
-    logits_train = conv_net(features, params['num_classes'], params['dropout_rate'], reuse=False, is_training=True)
-    logits_test = conv_net(features, params['num_classes'], params['dropout_rate'], reuse=True, is_training=False)
+    logits_train = conv_net(features, params['num_classes'], params['img_size'], params['dropout_rate'], reuse=False, is_training=True)
+    logits_test = conv_net(features, params['num_classes'], params['img_size'], params['dropout_rate'], reuse=True, is_training=False)
     
     # Predictions
     pred_classes = tf.argmax(logits_test, axis=1)
