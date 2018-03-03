@@ -6,16 +6,6 @@ img_size = 48
 img_size_flat = img_size * img_size
 img_shape = (img_size, img_size)
 
-# Class info
-num_classes = 7
-class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-
-# Hyperparameters
-learning_rate = 0.001
-num_steps = 20000
-batch_size = 128
-dropout = 0.25
-
 # Enable logging
 tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -70,13 +60,13 @@ def conv_net(x_dict, n_classes, dropout, reuse, is_training):
     return out
 
 # Define the model function (following TF Estimator Template)
-def model_fn(features, labels, mode):
+def model_fn(features, labels, mode, params):
     
     # Build the neural network
     # Because Dropout have different behavior at training and prediction time, we
     # need to create 2 distinct computation graphs that still share the same weights.
-    logits_train = conv_net(features, num_classes, dropout, reuse=False, is_training=True)
-    logits_test = conv_net(features, num_classes, dropout, reuse=True, is_training=False)
+    logits_train = conv_net(features, params['num_classes'], params['dropout_rate'], reuse=False, is_training=True)
+    logits_test = conv_net(features, params['num_classes'], params['dropout_rate'], reuse=True, is_training=False)
     
     # Predictions
     pred_classes = tf.argmax(logits_test, axis=1)
@@ -89,15 +79,15 @@ def model_fn(features, labels, mode):
     # Define loss and optimizer
     loss_op = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
         logits=logits_train, labels=tf.cast(labels, dtype=tf.int32)))
-    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    optimizer = tf.train.AdamOptimizer(learning_rate=params['learning_rate'])
     train_op = optimizer.minimize(loss_op, global_step=tf.train.get_global_step())
     
     # Evaluate the accuracy of the model
     acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
 
-    # Write summary for tensorboard
-    tf.summary.scalar("loss", loss_op)
-    tf.summary.scalar("accuracy", acc_op)
+    # TODO: Write summary for tensorboard
+    # tf.summary.scalar("loss", loss_op)
+    # tf.summary.scalar("accuracy", acc_op)
     
     # TF Estimators requires to return a EstimatorSpec, that specify
     # the different ops for training, evaluating, ...

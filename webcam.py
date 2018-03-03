@@ -9,7 +9,6 @@ webcam = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier('model/haarcascade_frontalface_default.xml')
 
 # variables
-class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 face_locations = []
 face_emotions = []
 frame_count = 0
@@ -44,7 +43,7 @@ while True:
             face_input_intensity = np.divide(face_input_byte, 255)
 
             pred_class = predict.predictEmotion(face_input_intensity)
-            face_emotions.append(class_labels[pred_class])
+            face_emotions.append(predict.class_labels[pred_class])
 
 
     # Display the results

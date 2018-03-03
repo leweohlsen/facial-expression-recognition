@@ -4,6 +4,10 @@ import csv
 
 import model
 
+# Training Parameters
+num_steps = 20000
+batch_size = 128
+
 # Feature Vectors (0-255)
 imgs_train_byte = []
 imgs_test_byte = []
@@ -40,16 +44,22 @@ imgs_test = np.divide(imgs_test_byte, 255)
 
 
 # Build the Estimator
-estimator = tf.estimator.Estimator(model_fn=model.model_fn, model_dir='./model')
-
+estimator = tf.estimator.Estimator(
+    model_fn=model.model_fn, 
+    model_dir='./model',
+    params={
+        'learning_rate': 0.001,
+        'num_classes': 7,
+        'dropout_rate': 0.25
+    })
 
 # Training
 # Define the input function for training
 input_fn = tf.estimator.inputs.numpy_input_fn(
     x={'images': imgs_train}, y=labels_train_class,
-    batch_size=model.batch_size, num_epochs=None, shuffle=True)
+    batch_size=batch_size, num_epochs=None, shuffle=True)
 # Train the Model
-estimator.train(input_fn, steps=model.num_steps)
+estimator.train(input_fn, steps=num_steps)
 
 
 
@@ -57,6 +67,6 @@ estimator.train(input_fn, steps=model.num_steps)
 # Define the input function for evaluating
 input_fn = tf.estimator.inputs.numpy_input_fn(
     x={'images': imgs_test}, y=labels_test_class,
-    batch_size=model.batch_size, shuffle=False)
+    batch_size=batch_size, shuffle=False)
 # Use the Estimator 'evaluate' method
 estimator.evaluate(input_fn)
