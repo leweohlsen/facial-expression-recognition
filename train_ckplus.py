@@ -4,11 +4,12 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import numpy as np
 import random
+import cv2
 import model
 import csv
 
 # Training Parameters
-num_steps = 250
+num_steps = 500
 batch_size = 16
 
 # images and labels
@@ -19,13 +20,19 @@ labels = []
 with open('data/ckplus.csv') as csvfile:
     readCSV = csv.reader(csvfile, delimiter=',')
     for row in readCSV:
-        pixels_test = [float(x) for x in row[1].split(' ')]
-        imgs.append(np.array(pixels_test))
+        pixels = [float(x) for x in row[1].split(' ')]
+        imgs.append(np.array(pixels))
         labels.append(int(row[0]))
 
 # wrap into np arrays and divide pixels by 255
 imgs = np.array(imgs, dtype=np.float32)
 imgs = np.divide(imgs, 255)
+
+# take a peek at the images
+# for i in imgs:
+#     cv2.imshow('Face', np.reshape(np.array(i), [128, 128]))
+#     cv2.waitKey()
+
 labels = np.array(labels, dtype=np.float32)
 
 # TODO: "leave one out" cross validation?
