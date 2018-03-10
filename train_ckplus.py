@@ -9,7 +9,7 @@ import model
 import csv
 
 # Training Parameters
-num_steps = 500
+num_steps = 600
 batch_size = 16
 
 # images and labels
@@ -49,7 +49,7 @@ estimator = tf.estimator.Estimator(
         'learning_rate': 0.001,
         'num_classes': 7,
         'img_size': 128,
-        'dropout_rate': 0.25
+        'dropout_rate': 0.50
     })
 
 # Training
@@ -69,3 +69,12 @@ input_fn = tf.estimator.inputs.numpy_input_fn(
     batch_size=batch_size, shuffle=False)
 # Use the Estimator 'evaluate' method
 estimator.evaluate(input_fn)
+
+# Export the model as a SavedModel for production
+feature_spec = {'images': tf.placeholder(dtype=tf.float32, shape=[128, 128])}
+serving_input_fn = tf.estimator.export.build_raw_serving_input_receiver_fn(feature_spec)
+
+estimator.export_savedmodel(
+    export_dir_base='saved_models',
+    serving_input_receiver_fn=serving_input_fn,
+    as_text=True)

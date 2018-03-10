@@ -1,29 +1,12 @@
 import tensorflow as tf
+from tensorflow.contrib import predictor
 import numpy as np
 import model
 
 class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
-# Build the Estimator
-estimator = tf.estimator.Estimator(
-    model_fn=model.model_fn, 
-    model_dir='./model/ckplus',
-    params={
-        'learning_rate': 0.001,
-        'num_classes': 7,
-        'img_size': 128,
-        'dropout_rate': 0.25
-    })
-
-session = tf.Session()
+saved_model_predictor = predictor.from_saved_model(export_dir='saved_models/1520693695')
 
 def predictEmotion(img):
-    # Evaluate the Model
-    # Define the input function for evaluating
-    input_fn = tf.estimator.inputs.numpy_input_fn(
-        x={'images': img}, shuffle=False)
-
-    # Use the model to predict the images class
-    preds = list(estimator.predict(input_fn))
-    print(preds, " -> ", class_labels[preds[0]])
-    return preds[0]
+    output_dict = saved_model_predictor({'images': img})
+    return output_dict['output'][0]
