@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import cv2
 import numpy as np
 import predict
@@ -35,7 +37,7 @@ while True:
         face_emotions = []
         for (x, y, w, h) in faces:
 
-            print(x, y, w, h)
+            # print(x, y, w, h)
 
             face = frame_resized_gray[y:y+h, x:x+w]
             face_input = cv2.resize(face, (128, 128))
