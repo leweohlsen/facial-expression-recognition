@@ -83,7 +83,6 @@ def model_fn(features, labels, mode, params):
     # Evaluate the accuracy of the model
     acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
 
-    # TODO: Write summary for tensorboard
     tf.summary.scalar("loss", loss_op)
     tf.summary.scalar("accuracy", acc_op[0])
     
