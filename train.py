@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import numpy as np
 import tensorflow as tf
 import csv
@@ -5,7 +7,7 @@ import csv
 import model
 
 # Training Parameters
-num_steps = 20000
+num_steps = 100
 batch_size = 128
 
 # Feature Vectors (0-255)
@@ -27,7 +29,7 @@ with open('data/fer2013.csv') as csvfile:
             pixels_train = [float(x) for x in row[1].split(' ')]
             imgs_train_byte.append(np.array(pixels_train))
             labels_train_class.append(int(row[0]))
-        elif row[2] == 'PrivateTest':
+        elif row[2] == 'PublicTest':
             pixels_test = [float(x) for x in row[1].split(' ')]
             imgs_test_byte.append(np.array(pixels_test))
             labels_test_class.append(int(row[0]))
@@ -71,3 +73,12 @@ input_fn = tf.estimator.inputs.numpy_input_fn(
     batch_size=batch_size, shuffle=False)
 # Use the Estimator 'evaluate' method
 estimator.evaluate(input_fn)
+
+# Export the model as a SavedModel for production use
+feature_spec = {'images': tf.placeholder(dtype=tf.float32, shape=[None, 48 * 48])}
+serving_input_fn = tf.estimator.export.build_raw_serving_input_receiver_fn(feature_spec)
+
+estimator.export_savedmodel(
+    export_dir_base='saved_models/fer2013',
+    serving_input_receiver_fn=serving_input_fn,
+    as_text=True)

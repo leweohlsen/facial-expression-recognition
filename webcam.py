@@ -40,11 +40,14 @@ while True:
             # print(x, y, w, h)
 
             face = frame_resized_gray[y:y+h, x:x+w]
-            face_input = cv2.resize(face, (128, 128))
+            face_input = cv2.resize(face, (128, 128)).reshape(1, 128*128)
             face_input_byte = np.array(face_input, dtype=np.float32)
             face_input_intensity = np.divide(face_input_byte, 255)
 
+            # pred_probas = predict.predictEmotion(face_input_intensity)
+            # np.set_printoptions(precision=3, suppress=True)
             pred_class = predict.predictEmotion(face_input_intensity)
+            print(pred_class)
             face_emotions.append(predict.class_labels[pred_class])
 
 

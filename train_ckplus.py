@@ -9,12 +9,13 @@ import model
 import csv
 
 # Training Parameters
-num_steps = 600
-batch_size = 16
+num_steps = 1000
+batch_size = 64
 
 # images and labels
 imgs = []
 labels = []
+img_size = 128
 
 # read csv file
 with open('data/ckplus.csv') as csvfile:
@@ -30,7 +31,7 @@ imgs = np.divide(imgs, 255)
 
 # take a peek at the images
 # for i in imgs:
-#     cv2.imshow('Face', np.reshape(np.array(i), [128, 128]))
+#     cv2.imshow('Face', np.reshape(np.array(i), [img_size, img_size]))
 #     cv2.waitKey()
 
 labels = np.array(labels, dtype=np.float32)
@@ -38,7 +39,6 @@ labels = np.array(labels, dtype=np.float32)
 # TODO: "leave one out" cross validation?
 
 # use sklearn for dividing dataset randomly (pseudo-random for now..)
-random.seed(42)
 imgs_train, imgs_test, labels_train, labels_test = train_test_split(imgs, labels, test_size=0.2, random_state=42)
 
 # Build the Estimator
@@ -48,7 +48,7 @@ estimator = tf.estimator.Estimator(
     params={
         'learning_rate': 0.001,
         'num_classes': 7,
-        'img_size': 128,
+        'img_size': img_size,
         'dropout_rate': 0.50
     })
 
@@ -70,11 +70,11 @@ input_fn = tf.estimator.inputs.numpy_input_fn(
 # Use the Estimator 'evaluate' method
 estimator.evaluate(input_fn)
 
-# Export the model as a SavedModel for production
-feature_spec = {'images': tf.placeholder(dtype=tf.float32, shape=[128, 128])}
+# Export the model as a SavedModel for production use
+feature_spec = {'images': tf.placeholder(dtype=tf.float32, shape=[None, img_size * img_size])}
 serving_input_fn = tf.estimator.export.build_raw_serving_input_receiver_fn(feature_spec)
 
 estimator.export_savedmodel(
-    export_dir_base='saved_models',
+    export_dir_base='saved_models/ckplus',
     serving_input_receiver_fn=serving_input_fn,
     as_text=True)
