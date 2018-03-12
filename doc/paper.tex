@@ -84,7 +84,7 @@
 
 \section{Introduction}
 
-Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction (HCI) and artificial emotional intelligence. The projects goal is to build a device to process live webcam images, detect faces and classify the emotion of each face.
+Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction (HCI) and artificial emotional intelligence. This projects goal is to develop a classifier for real-time detection of facial expressions. 
 
 As Convolutional Neural Networks (CNNs) have proven to be successful with many kinds of image classification  problems, I will focus on building a classifier using a state of the art CNN implementation.
 
@@ -98,19 +98,26 @@ To build a classifier for facial expressions, a dataset with labeled images of f
 
 \subsection{FER-2013}
 
-The FER-2013 Dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. These images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Faces are snapped from very different angles, hence generalization of these samples is difficult.
-
-
+The FER-2013 Dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. These images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Faces are depicted from very different angles, hence generalization of these samples is difficult. 
 
 \begin{figure}[H]
 	\includegraphics[width=0.48\textwidth]{class_dist}
 	\caption{FER-2013 emotion class distribution}
 \end{figure}
 
+The class labels were crowd-sourced with Amazon Mechanical Turk, where quality work is not incentivised, so we can expect label-noise to be significant. It is expected that every subject shows only a single emotion, where in reality faces can express mixed emotions (e.g happiness and surprise). A research group at Microsoft (who?) decided to minimize label-noise in FER-2013 by re-labeling the dataset (REF). Ten workers on MTurk were asked to label each image, yielding a probability distribution of emotion classes instead of a single class for each image.
+
+
+
+
 \subsection{Cohn-Kanade (CK+)}
-To argument the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. The Cohn-Kanade (CK+) dataset consists of 593 image sequences across 123 subjects. Each image sequence goes from a neutral facial expression to a "peak expression" according to the six basic emotions. Because only 327 of the 593 image sequences are labeled with emotion data. This is because not all images fit the prototypic definition of the Facial Action Coding System (FACS) according to Ekman et al. CK+ also contains FACS data, in which action units (e.g raised eyebrow) are identified along with their degree of activation.
+To augument the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. The Cohn-Kanade (CK+) dataset consists of 593 image sequences across 123 subjects. Each image sequence goes from a neutral facial expression to a "peak expression" according to the six basic emotions. Only 327 of the 593 image sequences are labeled with emotion data. This is because not all images fit the prototypic definition of the Facial Action Coding System (FACS) according to Ekman et al. CK+ also contains FACS data, in which facial action units (e.g raised eyebrow) are identified along with their degree of activation.
 
 Figure of CK+ distribution with neutral images.
+
+%------------------------------------------------
+
+\section{Related work}
 
 
 %------------------------------------------------
