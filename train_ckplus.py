@@ -9,8 +9,8 @@ import model
 import csv
 
 # Training Parameters
-num_steps = 1000
-batch_size = 64
+num_steps = 500
+batch_size = 32
 
 # images and labels
 imgs = []
