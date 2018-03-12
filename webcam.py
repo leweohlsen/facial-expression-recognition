@@ -16,8 +16,6 @@ face_emotions = []
 frame_count = 0
 process_every_n_frames = 10
 
-img_size = 48
-
 while True:
     # Grab a single frame of the video
     ret, frame = webcam.read()
@@ -42,13 +40,17 @@ while True:
             # print(x, y, w, h)
 
             face = frame_resized_gray[y:y+h, x:x+w]
-            face_input = cv2.resize(face, (img_size, img_size)).reshape(1, img_size*img_size)
-            face_input_byte = np.array(face_input, dtype=np.float32)
-            face_input_intensity = np.divide(face_input_byte, 255)
+            face_input_48 = cv2.resize(face, (48, 48)).reshape(1, 48*48)
+            face_input_48 = np.array(face_input_48, dtype=np.float32)
+            face_input_48 = np.divide(face_input_48, 255)
+
+            face_input_128 = cv2.resize(face, (128, 128)).reshape(1, 128*128)
+            face_input_128 = np.array(face_input_128, dtype=np.float32)
+            face_input_128 = np.divide(face_input_128, 255)
 
             # pred_probas = predict.predictEmotion(face_input_intensity)
             # np.set_printoptions(precision=3, suppress=True)
-            pred_class = predict.predictEmotion(face_input_intensity)
+            pred_class = predict.predictEmotion(face_input_128, face_input_48)
             print(pred_class)
             face_emotions.append(predict.class_labels[pred_class])
 
