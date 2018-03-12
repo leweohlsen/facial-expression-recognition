@@ -16,6 +16,8 @@ face_emotions = []
 frame_count = 0
 process_every_n_frames = 10
 
+img_size = 48
+
 while True:
     # Grab a single frame of the video
     ret, frame = webcam.read()
@@ -40,7 +42,7 @@ while True:
             # print(x, y, w, h)
 
             face = frame_resized_gray[y:y+h, x:x+w]
-            face_input = cv2.resize(face, (128, 128)).reshape(1, 128*128)
+            face_input = cv2.resize(face, (img_size, img_size)).reshape(1, img_size*img_size)
             face_input_byte = np.array(face_input, dtype=np.float32)
             face_input_intensity = np.divide(face_input_byte, 255)
 

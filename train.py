@@ -7,7 +7,7 @@ import csv
 import model
 
 # Training Parameters
-num_steps = 100
+num_steps = 50000
 batch_size = 128
 
 # Feature Vectors (0-255)
