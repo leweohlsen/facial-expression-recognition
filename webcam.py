@@ -42,11 +42,11 @@ while True:
             face = frame_resized_gray[y:y+h, x:x+w]
             face_input_48 = cv2.resize(face, (48, 48)).reshape(1, 48*48)
             face_input_48 = np.array(face_input_48, dtype=np.float32)
-            face_input_48 = np.divide(face_input_48, 255)
+            # face_input_48 = np.divide(face_input_48, 255)
 
             face_input_128 = cv2.resize(face, (128, 128)).reshape(1, 128*128)
             face_input_128 = np.array(face_input_128, dtype=np.float32)
-            face_input_128 = np.divide(face_input_128, 255)
+            # face_input_128 = np.divide(face_input_128, 255)
 
             # pred_probas = predict.predictEmotion(face_input_intensity)
             # np.set_printoptions(precision=3, suppress=True)
