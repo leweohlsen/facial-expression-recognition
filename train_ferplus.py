@@ -7,65 +7,55 @@ import pandas as pd
 import model
 
 # Training Parameters
-num_steps = 50000
+num_steps = 10000
 batch_size = 128
 
-# Feature Vectors (0-255)
-imgs_train_byte = []
-imgs_test_byte = []
-
-# Labels (0-6)
-labels_train_class = []
-labels_test_class = []
-
-
+# read csv with pandas
 ferplus = pd.read_csv('data/ferplus.csv')
 
+# split and cast pixel intensities to float32
 ferplus.pixels = ferplus.pixels.str.split()
+ferplus.pixels = ferplus.pixels.map(lambda p: pd.to_numeric(p, downcast='float'))
 
-ferplus.pixels.map(int)
+# filter noface class
+ferplus = ferplus.query('NF==0')
 
+# get argmax of class distribution to use as label
+labels = ferplus[['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']]
+maxlabels = labels.idxmax(axis=1).map(labels.columns.get_loc)
+ferplus.insert(loc=12, column='maxlabel', value=maxlabels)
 
+# split train, test and validation set
 train = ferplus.loc[ferplus['Usage'] == 'Training']
 test = ferplus.loc[ferplus['Usage'] == 'PublicTest']
 validation = ferplus.loc[ferplus['Usage'] == 'PrivateTest']
 
-        # if row[2] == 'Training':
-        #     # cast pixels to int
-        #     pixels_train = [float(x) for x in row[1].split(' ')]
-        #     imgs_train_byte.append(np.array(pixels_train))
-        #     labels_train_class.append(int(row[0]))
-        # elif row[2] == 'PublicTest':
-        #     pixels_test = [float(x) for x in row[1].split(' ')]
-        #     imgs_test_byte.append(np.array(pixels_test))
-        #     labels_test_class.append(int(row[0]))
+x_train = np.array(train['pixels'].values.tolist())
+x_test = np.array(test['pixels'].values.tolist())
+x_validation = np.array(validation['pixels'].values.tolist())
 
-
-# cast to correct type and wrap into np arrays
-imgs_train_byte = np.array(imgs_train_byte, dtype=np.float32)
-imgs_test_byte = np.array(imgs_test_byte, dtype=np.float32)
-labels_train_class = np.array(labels_train_class, dtype=np.float32)
-labels_test_class = np.array(labels_test_class, dtype=np.float32)
-# normalize the pixel intensitys
-imgs_train = np.divide(imgs_train_byte, 255)
-imgs_test = np.divide(imgs_test_byte, 255)
+y_train = train['maxlabel'].values
+y_test = test['maxlabel'].values
+y_validation = validation['maxlabel'].values
 
 
 # Build the Estimator
 estimator = tf.estimator.Estimator(
     model_fn=model.model_fn, 
-    model_dir='./model',
+    model_dir='./model/ferplus',
     params={
         'learning_rate': 0.001,
         'num_classes': 7,
         'img_size': 48,
         'dropout_rate': 0.25
-    })
+})
+
+
 
 # Training
 # Define the input function for training
 input_fn = tf.estimator.inputs.numpy_input_fn(
-    x={'images': imgs_train}, y=labels_train_class,
+    x={'images': x_train}, y=y_train,
     batch_size=batch_size, num_epochs=None, shuffle=True)
 # Train the Model
 estimator.train(input_fn, steps=num_steps)
@@ -75,7 +65,7 @@ estimator.train(input_fn, steps=num_steps)
 # Evaluate the Model
 # Define the input function for evaluating
 input_fn = tf.estimator.inputs.numpy_input_fn(
-    x={'images': imgs_test}, y=labels_test_class,
+    x={'images': x_test}, y=y_test,
     batch_size=batch_size, shuffle=False)
 # Use the Estimator 'evaluate' method
 estimator.evaluate(input_fn)
@@ -85,6 +75,6 @@ feature_spec = {'images': tf.placeholder(dtype=tf.float32, shape=[None, 48 * 48]
 serving_input_fn = tf.estimator.export.build_raw_serving_input_receiver_fn(feature_spec)
 
 estimator.export_savedmodel(
-    export_dir_base='saved_models/fer2013',
+    export_dir_base='saved_models/ferplus',
     serving_input_receiver_fn=serving_input_fn,
     as_text=True)
