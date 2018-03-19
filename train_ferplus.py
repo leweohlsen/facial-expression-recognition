@@ -6,37 +6,38 @@ import pandas as pd
 
 import model
 
-# Training Parameters
-num_steps = 10000
+# Training Parameters.
+max_steps = 1500
 batch_size = 128
+eval_interval = 240
 
-# read csv with pandas
+# Read CSV with pandas.
 ferplus = pd.read_csv('data/ferplus.csv')
 
-# split and cast pixel intensities to float32
+# Split and cast pixel intensities to float32.
 ferplus.pixels = ferplus.pixels.str.split()
 ferplus.pixels = ferplus.pixels.map(lambda p: pd.to_numeric(p, downcast='float'))
 
-# filter noface class
+# Filter noface class.
 ferplus = ferplus.query('NF==0')
 
-# get argmax of class distribution to use as label
+# Get argmax of class distribution to use as label.
 labels = ferplus[['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']]
 maxlabels = labels.idxmax(axis=1).map(labels.columns.get_loc)
 ferplus.insert(loc=12, column='maxlabel', value=maxlabels)
 
-# split train, test and validation set
+# Split train, test and validation set.
 train = ferplus.loc[ferplus['Usage'] == 'Training']
-test = ferplus.loc[ferplus['Usage'] == 'PublicTest']
-validation = ferplus.loc[ferplus['Usage'] == 'PrivateTest']
+valid = ferplus.loc[ferplus['Usage'] == 'PublicTest']
+test = ferplus.loc[ferplus['Usage'] == 'PrivateTest']
 
-x_train = np.array(train['pixels'].values.tolist())
 x_test = np.array(test['pixels'].values.tolist())
-x_validation = np.array(validation['pixels'].values.tolist())
+x_train = np.array(train['pixels'].values.tolist())
+x_valid = np.array(valid['pixels'].values.tolist())
 
-y_train = train['maxlabel'].values
 y_test = test['maxlabel'].values
-y_validation = validation['maxlabel'].values
+y_train = train['maxlabel'].values
+y_valid = valid['maxlabel'].values
 
 
 # Build the Estimator
@@ -51,23 +52,38 @@ estimator = tf.estimator.Estimator(
 })
 
 
-
-# Training
-# Define the input function for training
-input_fn = tf.estimator.inputs.numpy_input_fn(
+# Define the input function for training.
+train_input_fn = tf.estimator.inputs.numpy_input_fn(
     x={'images': x_train}, y=y_train,
     batch_size=batch_size, num_epochs=None, shuffle=True)
-# Train the Model
-estimator.train(input_fn, steps=num_steps)
+
+# Define the input function for validation during training.
+valid_input_fn = tf.estimator.inputs.numpy_input_fn(
+    x={'images': x_valid}, y=y_valid,
+    batch_size=batch_size, num_epochs=None, shuffle=False)
+
+# Specify training operations.
+train_spec = tf.estimator.TrainSpec(
+    input_fn = train_input_fn,
+    max_steps = max_steps
+)
+
+# Specify evaluation operations.
+eval_spec = tf.estimator.EvalSpec(
+    input_fn = valid_input_fn,
+    throttle_secs=eval_interval,
+    start_delay_secs=eval_interval,
+)
+
+# Train the Model and evaluate periodically
+tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
 
 
-
-# Evaluate the Model
-# Define the input function for evaluating
+# Define the input function for evaluating with the test set.
 input_fn = tf.estimator.inputs.numpy_input_fn(
     x={'images': x_test}, y=y_test,
     batch_size=batch_size, shuffle=False)
-# Use the Estimator 'evaluate' method
+# Evaluate the model accuracy with the test set
 estimator.evaluate(input_fn)
 
 # Export the model as a SavedModel for production use
