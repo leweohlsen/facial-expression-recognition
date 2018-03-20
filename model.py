@@ -52,9 +52,9 @@ def conv_net(x_dict, n_classes, img_size, dropout, reuse, is_training):
         fc = tf.layers.dropout(fc, rate=dropout, training=is_training)
 
         # Output layer, class prediction.
-        out = tf.layers.dense(fc, n_classes)
+        logits = tf.layers.dense(fc, n_classes)
 
-    return out
+    return logits
 
 # Define the model function (following TF Estimator Template)
 def model_fn(features, labels, mode, params):
@@ -80,8 +80,10 @@ def model_fn(features, labels, mode, params):
         optimizer = tf.train.AdamOptimizer(learning_rate=params['learning_rate'])
         train_op = optimizer.minimize(loss_op, global_step=tf.train.get_global_step())
         
-        # Evaluate the training accuracy for this batch
+        # Accuracy for TensorBoard summary
         acc = tf.reduce_mean(tf.cast(tf.equal(tf.cast(labels, tf.int64), pred_classes), tf.float32))
+        # Accuracy metric for train_and_eval function
+        acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
 
         tf.summary.scalar("loss", loss_op)
         tf.summary.scalar("accuracy", acc)
@@ -90,6 +92,7 @@ def model_fn(features, labels, mode, params):
             mode=mode,
             predictions=pred_classes,
             loss=loss_op,
-            train_op=train_op)
+            train_op=train_op,
+            eval_metric_ops={'accuracy': acc_op})
 
     return spec
