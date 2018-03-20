@@ -7,7 +7,7 @@ import pandas as pd
 import model
 
 # Training Parameters.
-max_steps = 1500
+max_steps = 5000
 batch_size = 128
 eval_interval = 240
 
@@ -18,11 +18,16 @@ ferplus = pd.read_csv('data/ferplus.csv')
 ferplus.pixels = ferplus.pixels.str.split()
 ferplus.pixels = ferplus.pixels.map(lambda p: pd.to_numeric(p, downcast='float'))
 
-# Filter noface class.
-ferplus = ferplus.query('NF==0')
+# Filter out noface class.
+ferplus = ferplus.query('NF == 0')
+# Filter out faces where four or more workers were not sure about the emotion.
+ferplus = ferplus.query('unknown < 4')
+
+# Class labels in the usual order.
+classes = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']
 
 # Get argmax of class distribution to use as label.
-labels = ferplus[['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']]
+labels = ferplus[classes]
 maxlabels = labels.idxmax(axis=1).map(labels.columns.get_loc)
 ferplus.insert(loc=12, column='maxlabel', value=maxlabels)
 
@@ -31,13 +36,15 @@ train = ferplus.loc[ferplus['Usage'] == 'Training']
 valid = ferplus.loc[ferplus['Usage'] == 'PublicTest']
 test = ferplus.loc[ferplus['Usage'] == 'PrivateTest']
 
+# Prepare input images
 x_test = np.array(test['pixels'].values.tolist())
 x_train = np.array(train['pixels'].values.tolist())
 x_valid = np.array(valid['pixels'].values.tolist())
 
-y_test = test['maxlabel'].values
-y_train = train['maxlabel'].values
-y_valid = valid['maxlabel'].values
+# Prepate input label distributions
+y_test = test[classes].values
+y_train = train[classes].values
+y_valid = valid[classes].values
 
 
 # Build the Estimator
@@ -48,7 +55,7 @@ estimator = tf.estimator.Estimator(
         'learning_rate': 0.001,
         'num_classes': 7,
         'img_size': 48,
-        'dropout_rate': 0.25
+        'dropout_rate': 0.3
 })
 
 
