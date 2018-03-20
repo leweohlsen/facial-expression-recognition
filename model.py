@@ -15,6 +15,7 @@ def conv_net(x_dict, n_classes, img_size, dropout, reuse, is_training):
         # 4D Input-Tensor: [Batch Size, Height, Width, Channel]
         x = tf.reshape(x, shape=[-1, img_size, img_size, 1])
 
+        # Write images to summary for TensorBoard
         tf.summary.image("img", x)
 
         # Convolution Layers with 32 filters and a kernel size of 3.
@@ -56,10 +57,8 @@ def conv_net(x_dict, n_classes, img_size, dropout, reuse, is_training):
 
     return logits
 
-# Define the model function (following TF Estimator Template)
 def model_fn(features, labels, mode, params):
-    
-    # Build the neural network
+
     # Because Dropout has different behavior at training and prediction time, we
     # need to create 2 distinct computation graphs that still share the same weights.
     logits_train = conv_net(features, params['num_classes'], params['img_size'], params['dropout_rate'], reuse=False, is_training=True)
@@ -74,20 +73,32 @@ def model_fn(features, labels, mode, params):
             predictions=pred_classes,
             export_outputs={'classes': tf.estimator.export.PredictOutput(pred_classes)})
     else:
-        # Define loss and optimizer
-        loss_op = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
-            logits=logits_train, labels=tf.cast(labels, dtype=tf.int32)))
+        # Define loss across all classes
+        loss_op = tf.reduce_mean(
+            tf.nn.softmax_cross_entropy_with_logits_v2(
+                logits=logits_train,
+                labels=tf.nn.softmax(
+                    tf.cast(labels, dtype=tf.float32)
+                )
+            )
+        )
+
+        # Define Optimizer with learning rate decay
         optimizer = tf.train.AdamOptimizer(learning_rate=params['learning_rate'])
+
+        # Define Train Operation
         train_op = optimizer.minimize(loss_op, global_step=tf.train.get_global_step())
         
         # Accuracy for TensorBoard summary
-        acc = tf.reduce_mean(tf.cast(tf.equal(tf.cast(labels, tf.int64), pred_classes), tf.float32))
+        acc = tf.reduce_mean(tf.cast(tf.equal(tf.cast(tf.argmax(labels, axis=1), tf.int64), pred_classes), tf.float32))
         # Accuracy metric for train_and_eval function
-        acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
+        acc_op = tf.metrics.accuracy(labels=tf.argmax(labels, axis=1), predictions=pred_classes)
 
+        # Write summaries for TensorBoard
         tf.summary.scalar("loss", loss_op)
         tf.summary.scalar("accuracy", acc)
         
+        # The model function needs to return an EstimatorSpec
         spec = tf.estimator.EstimatorSpec(
             mode=mode,
             predictions=pred_classes,
