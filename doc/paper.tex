@@ -84,9 +84,7 @@
 
 \section{Introduction}
 
-Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction (HCI) and artificial emotional intelligence. This projects goal is to develop a classifier for real-time detection of facial expressions. 
-
-As Convolutional Neural Networks (CNNs) have proven to be successful with many kinds of image classification  problems, I will focus on building a classifier using a state of the art CNN implementation.
+Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction (HCI) and artificial emotional intelligence. This projects goal is to develop a classifier for real-time detection of facial expressions using Convolutional Neural Networks (CNNs).
 
 %------------------------------------------------
 
@@ -94,26 +92,43 @@ As Convolutional Neural Networks (CNNs) have proven to be successful with many k
 
 Paul Ekmans 1969 research paper "Facial Expressions" (REF) elaborates that facial expressions can be interpreted and categorized into six classes of basic emotion that can be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise. In this project, these classes are used for training and predictions.
 
-To build a classifier for facial expressions, a dataset with labeled images of faces is required. Each of the datasets is split into two subsets: A training set that is used to fit the prediction and a test set to evaluate the prediction results.
+To build an automatic classifier for facial expressions, two datasets with labeled images of faces are required. Each of the datasets is split into two subsets: A training set that is used to fit the prediction and a test set to evaluate the prediction results.
+
 
 \subsection{FER-2013}
 
-The FER-2013 Dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. These images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Faces are depicted from very different angles, hence generalization of these samples is difficult. 
+The FER-2013 dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. These images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Faces are depicted from very different angles, hence generalization of these samples is difficult. 
 
 \begin{figure}[H]
 	\includegraphics[width=0.48\textwidth]{class_dist}
 	\caption{FER-2013 emotion class distribution}
 \end{figure}
 
-The class labels were crowd-sourced with Amazon Mechanical Turk, where quality work is not incentivised, so we can expect label-noise to be significant. It is expected that every subject shows only a single emotion, where in reality faces can express mixed emotions (e.g happiness and surprise). A research group at Microsoft (who?) decided to minimize label-noise in FER-2013 by re-labeling the dataset (REF). Ten workers on MTurk were asked to label each image, yielding a probability distribution of emotion classes instead of a single class for each image.
-
-
+The class labels were crowd-sourced with Amazon Mechanical Turk, where quality work is not incentivized, so we can expect noisy labels to be a problem. It is expected that every subject shows only a single emotion, where in reality faces can express mixed emotions (e.g happiness and surprise). A research group at Microsoft (who?) decided to minimize label-noise in FER-2013 by re-labeling the dataset (REF). Ten workers on Mechanical Turk were asked to label each image, yielding a probability distribution of emotion classes instead of a single class for each image.
 
 
 \subsection{Cohn-Kanade (CK+)}
-To augument the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. The Cohn-Kanade (CK+) dataset consists of 593 image sequences across 123 subjects. Each image sequence goes from a neutral facial expression to a "peak expression" according to the six basic emotions. Only 327 of the 593 image sequences are labeled with emotion data. This is because not all images fit the prototypic definition of the Facial Action Coding System (FACS) according to Ekman et al. CK+ also contains FACS data, in which facial action units (e.g raised eyebrow) are identified along with their degree of activation.
+To augument the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. The Cohn-Kanade (CK+) dataset consists of 593 image sequences across 123 subjects. Each image sequence goes from a neutral facial expression to a "peak expression" according to the six basic emotions. Only 327 of the 593 image sequences are labeled with emotion data. This is because not all images fit the prototypic definition of the Facial Action Coding System (FACS) according to Ekman et al. CK+ also contains FACS data, in which facial action units (e.g raised eyebrow) are identified along with their degree of activation. To show that extracted features are not strictly required for training an automatic classifier, the FACS data is not used as input.
 
 Figure of CK+ distribution with neutral images.
+
+%------------------------------------------------
+
+\section{Convolutional Neural Networks (CNNs)}
+Convolutional Neural Networks are are a special kind of multi-layer artificial neural networks. CNNs have been around since the 1990s, however they have lead to breakthrough results in practical small-scale application with computational power becoming more affordable in the last years. Convolutional Neural Networks can recognize visual patterns directly from pixel images with very little preprocessing. 
+
+Like conventional Artificial Neural Networks, a CNN can be thought of as a function $f(x) = y$ where the input $x$ is an array of image pixel intensities and $y$ is a probability distribution of the classes this image is predicted to belong to (e.g happiness, surprise, sadness).
+
+\subsection{CNN Components}
+
+
+%------------------------------------------------
+
+\section{Model Architecture}
+A deep CNN is implemented as a prediction model for classifying images of faces. To keep the model architecture as simple as possible, advanced regularization techniques such as batch normalization have been omitted. The model architecture has been improved incrementally throughout the designing process. This has not been done programmatically but rather in a trial-and-error kind of way.
+
+\subsection{AlexNet-like CNN}
+For the Imagenet Challenge (REF) Alex … proposed a deep neural network (DNN) model consisting of alternating convolution and pooling layers with local response normalization in between, followed by three fully connected layers. 
 
 %------------------------------------------------
 
@@ -123,6 +138,8 @@ Figure of CK+ distribution with neutral images.
 %------------------------------------------------
 
 \section{Discussion and Conclusion}
+
+% - CNN robustness to occlusion, distortions and geometric transformations.   
 
 
 
@@ -146,6 +163,10 @@ Figure of CK+ distribution with neutral images.
 	Neural Networks
 	, 64:59 – 63, 2015.
 	Special Issue on ‘Deep Learning of Representations’
+	
+	%[LeCun and Bengio, 1995a]
+    %Y. LeCun and Y. Bengio. Convolutional networks for images, speech, and time-series. 
+    %In M. A. Arbib, 		editor, The Handbook of Brain Theory and Neural Networks. MIT Press, 1995
 
  
 \end{thebibliography}
