@@ -117,9 +117,20 @@ Figure of CK+ distribution with neutral images.
 \section{Convolutional Neural Networks (CNNs)}
 Convolutional Neural Networks are are a special kind of multi-layer artificial neural networks. CNNs have been around since the 1990s, however they have lead to breakthrough results in practical small-scale application with computational power becoming more affordable in the last years. Convolutional Neural Networks can recognize visual patterns directly from pixel images with very little preprocessing. 
 
-Like conventional Artificial Neural Networks, a CNN can be thought of as a function $f(x) = y$ where the input $x$ is an array of image pixel intensities and $y$ is a probability distribution of the classes this image is predicted to belong to (e.g happiness, surprise, sadness).
+Like a regular Artificial Neural Network, a CNN can be thought of as a function $f(x) = y$ where the input $x$ is an image of a face and $y$ is a probability distribution of the classes this image is predicted to belong to (e.g happiness, surprise, sadness). Input images are flattened in dimension from 48x48 pixels to a single 2304-dimensional vector. For training and predictions, multiple images can be fed into the network function at once. When feeding $n$ images to the computational graph, the shape of the input tensor (matrix) is [2304, $n$]. The associated output tensor is shaped [$n$, 7], where the second dimension is the probability for each of the seven emotion classes.
+
+To effectively reduce dimensions between the input and output space and find a valid representation of the input image, a CNN is implemented using the TensorFlow API. In the layers of the computational graph, a sequence of operations is applied to the input image. 
 
 \subsection{CNN Components}
+
+\subsubsection{Convolutional Layer}
+The convolutional layer is the core building block of a CNN. Each layer is initialized with a set of $n$ random two-dimensional filter matrices (eg 3x3 pixels) and a pixel-stride. When an image is put into the convolutional layer, each of the filters is moved across the height and width of the image, calculating a dot product between the filter matrix and the current section of the image. The resulting matrices of dot products are called feature maps. To introduce non-linearity to the operation, a ReLu activation function $f(n) = max(0, n)$ is used on the feature-maps element-wise. The filters in the convolutional layers are trained using a backpropagation algorithm (REF). Intuitively, filters activate when they see different types of visual features, such as vertical or diagonal edges on the lower layers or, in the top convolutional layers, more complex patterns like eyebrows or mouths.
+
+\subsubsection{Pooling Layer}
+To progressively reduce dimensionality and computational cost, pooling layers can be found in the computational graph. Similar to the convolutional layer, filters are moved across the layer input, executing a pooling operation on each position. A common pooling operation is taking the max value on every filter position (Max-Pooling). For instance when pooling with a filter size of 3x3 pixels and a stride of 2 is applied to a 48x48 pixels image, the pooling output is a 24x24 pixels image.
+
+\subsubsection{Fully-Connected layers}
+In CNNs, fully connected layers are usually added at the top of the network. The advanced features that have been extracted in the top convolutional layers are mapped to a few layers of weighted nodes. On the first fully-connected layer, linear combinations of the feature maps activations are created. On top of that, linear transformations are applied to reduce the dimension to match the number of classes. A softmax function can be applied on the output layer to normalize the topmost fully connected layer into a valid probability distribution.
 
 
 %------------------------------------------------
