@@ -63,6 +63,9 @@ def detect_face(img):
 # csv file to write to
 csv_file = open('data/ckplus.csv', 'w')
 
+# write csv header
+csv_file.write("class,pixels\n")
+
 for root, dirs, files in os.walk(abspath + '/../data/ckplus/labels'):
     for file in files:
         csv_line = ''
