@@ -12,16 +12,23 @@ face_cascade = cv2.CascadeClassifier('model/haarcascade_frontalface_default.xml'
 
 # variables
 face_locations = []
-face_emotions = []
+faces_preds = []
 frame_count = 0
-process_every_n_frames = 10
+process_every_n_frames = 20
+
+# colors
+white = (255, 255, 255)
+black = (0, 0, 0)
+class_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+emotion_colors = [(54, 67, 244), (136, 150, 0), (76, 39, 156), (80, 175, 76), (0, 152, 255), (59, 235, 255), (243, 150, 33)]
+
 
 while True:
     # Grab a single frame of the video
     ret, frame = webcam.read()
 
     # Resize frame of video to 1/4 size for faster face recognition processing
-    frame_resized = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+    frame_resized = frame # cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     # Only process every other frame of video to save time
     if frame_count % process_every_n_frames == 0:
@@ -34,7 +41,7 @@ while True:
 
         print('Faces found: ', len(faces))
 
-        face_emotions = []
+        faces_preds = []
         for (x, y, w, h) in faces:
 
             # print(x, y, w, h)
@@ -50,26 +57,41 @@ while True:
 
             # pred_probas = predict.predictEmotion(face_input_intensity)
             # np.set_printoptions(precision=3, suppress=True)
-            pred_class = predict.predictEmotion(face_input_128, face_input_48)
-            print(pred_class)
-            face_emotions.append(predict.class_labels[pred_class])
+            prediction = predict.predict_emotion_probas(face_input_128, face_input_48)
+            print(prediction)
+            faces_preds.append(prediction)
 
 
     # Display the results
-    for (x, y, w, h), name in zip(faces, face_emotions):
+    for (x, y, w, h), (classes, probas) in zip(faces, faces_preds):
 
-        x *= 4
-        y *= 4
-        w*= 4
-        h *= 4
+        # x *= 4
+        # y *= 4
+        # w *= 4
+        # h *= 4
 
         # Draw a box around the face
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),2)
+        cv2.rectangle(frame,(x,y),(x+w,y+h), white, 2)
 
         # Draw a label with the classification result below the face
-        cv2.rectangle(frame, (x, y+h), (x+w, y+h+30), (0, 0, 255), cv2.FILLED)
-        font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, name, ((x, y+h+25)), font, 0.8, (255, 255, 255), 1)
+        cv2.rectangle(frame, (x-1, y+h), (x+w+1, y+h+70), white, cv2.FILLED)
+
+        # prepare strings for the top 3 predicted class labels and probabilities
+        top1 = predict.class_labels[classes[0]] + ' ' + str(int(probas[classes[0]] * 100)) + '%'
+        top2 = predict.class_labels[classes[1]] + ' ' + str(int(probas[classes[1]] * 100)) + '%'
+        top3 = predict.class_labels[classes[2]] + ' ' + str(int(probas[classes[2]] * 100)) + '%'
+
+        # probability bars
+        cv2.rectangle(frame, (x+1, y+h), (x+int(w * probas[classes[0]]), y+h+20), emotion_colors[classes[0]], cv2.FILLED)
+        cv2.rectangle(frame, (x+1, y+h+20), (x+int(w * probas[classes[1]]), y+h+40), emotion_colors[classes[1]], cv2.FILLED)
+        cv2.rectangle(frame, (x+1, y+h+40), (x+int(w * probas[classes[2]]), y+h+60), emotion_colors[classes[2]], cv2.FILLED)
+
+        # emotion labels
+        font = cv2.FONT_HERSHEY_PLAIN
+        cv2.putText(frame, top1, ((x, y+h+18)), font, 1.4, black, 2)
+        cv2.putText(frame, top2, ((x, y+h+38)), font, 1.4, black, 1)
+        cv2.putText(frame, top3, ((x, y+h+58)), font, 1.4, black, 1)
+
 
     frame_count += 1
 
