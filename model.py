@@ -71,7 +71,7 @@ def model_fn(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.PREDICT:
         spec = tf.estimator.EstimatorSpec(mode, 
             predictions=pred_classes,
-            export_outputs={'classes': tf.estimator.export.PredictOutput(pred_classes)})
+            export_outputs={'classes': tf.estimator.export.PredictOutput(pred_probas)})
     else:
         # Define loss across all classes
         loss_op = tf.reduce_mean(
