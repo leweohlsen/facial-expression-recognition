@@ -3,6 +3,7 @@ logs
 data
 doc/*
 !doc/paper.tex
+!doc/paper.bib
 !doc/doc.tex
 !doc/fer2013.bib
 !doc/figures/
