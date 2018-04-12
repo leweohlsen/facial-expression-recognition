@@ -84,19 +84,19 @@
 
 \section{Introduction}
 
-Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction (HCI) and artificial emotional intelligence. This projects goal is to develop a classifier for real-time detection of facial expressions using Convolutional Neural Networks (CNNs).
+Automatically recognizing facial expressions is an interesting and challenging problem in many fields, including human computer interaction and artificial emotional intelligence. Facial expressions can be interpreted and categorized into six classes of basic emotion that seem to be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise [REF]. This projects goal is to develop a classifier for real-time detection of these facial expressions.
+
+%------------------------------------------------
+
+\section{Related work}
+In the last years, great progress was made on the problem of automatically detecting facial expression from images. Some researchers have attempted to derive emotions from detecting individual muscle movements in images of faces by identifying muscles and their degree of activation [REF]. SIFT aggregation [REF]… Manual feature extraction tends to require expert knowledge and extra work for implementing complex algorithms, so it is convenient to implicitly extract relevant features from the data. This can be accomplished with Convolutional Neural Networks (CNNs) that are trained on a set of labeled images.
 
 %------------------------------------------------
 
 \section{Datasets}
-
-Paul Ekmans 1969 research paper "Facial Expressions" (REF) elaborates that facial expressions can be interpreted and categorized into six classes of basic emotion that can be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise. In this project, these classes are used for training and predictions.
-
-To build an automatic classifier for facial expressions, two datasets with labeled images of faces are required. Each of the datasets is split into two subsets: A training set that is used to fit the prediction and a test set to evaluate the prediction results.
-
+To train an automatic classifier using deep learning technology, a dataset that describes the problem is required. Each image in the dataset is mapped to a matching integer class label for the corresponding emotion. Two datasets, FER2013 [REF] and CK+ [REF] have been considered for training the deep learning model.
 
 \subsection{FER-2013}
-
 The FER-2013 dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. These images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Faces are depicted from very different angles, hence generalization of these samples is difficult. 
 
 \begin{figure}[H]
@@ -130,20 +130,18 @@ The convolutional layer is the core building block of a CNN. Each layer is initi
 To progressively reduce dimensionality and computational cost, pooling layers can be found in the computational graph. Similar to the convolutional layer, filters are moved across the layer input, executing a pooling operation on each position. A common pooling operation is taking the max value on every filter position (Max-Pooling). For instance when pooling with a filter size of 3x3 pixels and a stride of 2 is applied to a 48x48 pixels image, the pooling output is a 24x24 pixels image.
 
 \subsubsection{Fully-Connected layers}
-In CNNs, fully connected layers are usually added at the top of the network. The advanced features that have been extracted in the top convolutional layers are mapped to a few layers of weighted nodes. On the first fully-connected layer, linear combinations of the feature maps activations are created. On top of that, linear transformations are applied to reduce the dimension to match the number of classes. A softmax function can be applied on the output layer to normalize the topmost fully connected layer into a valid probability distribution.
+In CNNs, fully connected layers are added at the top of the network. The advanced features that have been extracted in the top convolutional layers are usually connected to two or more layers of weighted nodes. On the first fully-connected layer, linear combinations of the feature maps activations are created. On top of that, linear transformations are applied to reduce the dimension to match the number of classes. A softmax function can be applied on the output layer to normalize the topmost fully connected layer into a valid probability distribution.
 
 
 %------------------------------------------------
 
-\section{Model Architecture}
-A deep CNN is implemented as a prediction model for classifying images of faces. To keep the model architecture as simple as possible, advanced regularization techniques such as batch normalization have been omitted. The model architecture has been improved incrementally throughout the designing process. This has not been done programmatically but rather in a trial-and-error kind of way.
+\section{Model Architecture and Training}
+A deep CNN is implemented as a prediction model for classifying images of faces. The model architecture has been improved incrementally throughout the designing process. Hyperparameter Optimization has not been done programmatically but rather in a trial-and-error kind of way.
 
 \subsection{AlexNet-like CNN}
-For the Imagenet Challenge (REF) Alex … proposed a deep neural network (DNN) model consisting of alternating convolution and pooling layers with local response normalization in between, followed by three fully connected layers. 
+For the Imagenet Challenge (REF) Alex … proposed a deep neural network (DNN) model consisting of alternating convolution and pooling layers with local response normalization in between, followed by three fully connected layers.
 
-%------------------------------------------------
-
-\section{Related work}
+\subsection{Training Procedure}
 
 
 %------------------------------------------------
@@ -178,6 +176,8 @@ For the Imagenet Challenge (REF) Alex … proposed a deep neural network (DNN) m
 	%[LeCun and Bengio, 1995a]
     %Y. LeCun and Y. Bengio. Convolutional networks for images, speech, and time-series. 
     %In M. A. Arbib, 		editor, The Handbook of Brain Theory and Neural Networks. MIT Press, 1995
+    
+    % Paul Ekmans 1969 research paper "Facial Expressions"
 
  
 \end{thebibliography}
