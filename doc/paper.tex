@@ -97,12 +97,18 @@ In the last years, great progress was made on the problem of automatically detec
 \section{Datasets}
 To train an automatic classifier using deep learning technology, a dataset that describes the problem is required. Each image in the dataset is mapped to a matching integer class label for the corresponding emotion. Two datasets, FER2013 \cite{goodfel13} and CK+ \cite{cohn00} have been considered for training the deep learning model.
 
+\begin{figure}[H]
+	\includegraphics[width=0.48\textwidth]{fer_examples}
+	\caption{FER-2013 training samples}
+\end{figure}
+
+
 \subsection{FER-2013}
 The FER-2013 dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. These images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Faces are depicted from very different angles, hence generalization of these samples is difficult. 
 
 \begin{figure}[H]
-	\includegraphics[width=0.48\textwidth]{class_dist}
-	\caption{FER-2013 emotion class distribution}
+	\includegraphics[width=0.48\textwidth]{ferplus_distribution}
+	\caption{FER-2013 dataset class distribution}
 \end{figure}
 
 The class labels were crowd-sourced with Amazon Mechanical Turk, where quality work is not incentivized, so we can expect noisy labels to be a problem. It is expected that every subject shows only a single emotion, where in reality faces can express mixed emotions (e.g happiness and surprise). A research group at Microsoft decided to minimize label-noise in FER-2013 by re-labeling the dataset \cite{barsoum16}. Ten workers on Mechanical Turk were asked to label each image, yielding a probability distribution of emotion classes instead of a single class for each image.
@@ -111,7 +117,10 @@ The class labels were crowd-sourced with Amazon Mechanical Turk, where quality w
 \subsection{Cohn-Kanade (CK+)}
 To augment the wild variety of FER-2013 images, a second, more conservative dataset with only frontal faces is considered. The Cohn-Kanade (CK+) dataset consists of 593 image sequences across 123 subjects. Each image sequence goes from a neutral facial expression to a "peak expression" according to the six basic emotions. Only 327 of the 593 image sequences are labeled with emotion data. This is because not all images fit the prototypic definition of the Facial Action Coding System (FACS) according to Ekman et al. CK+ also contains FACS data, in which facial action units (e.g raised eyebrow) are identified along with their degree of activation. To show that extracted features are not strictly required for training an automatic classifier, the FACS data is not used as input.
 
-Figure of CK+ distribution with neutral images.
+\begin{figure}[H]
+	\includegraphics[width=0.48\textwidth]{ckplus_examples}
+	\caption{Posed facial expressions from the CK+ dataset}
+\end{figure}
 
 %------------------------------------------------
 
@@ -125,7 +134,7 @@ To effectively reduce dimensions between the input and output space and find a v
 \subsection{CNN Components}
 
 \subsubsection{Convolutional Layer}
-The convolutional layer is the core building block of a CNN. Each layer is initialized with a set of $n$ random two-dimensional filter matrices (eg 3x3 pixels) and a pixel-stride. When an image is put into the convolutional layer, each of the filters is moved across the height and width of the image, calculating a dot product between the filter matrix and the current section of the image. The resulting matrices of dot products are called feature maps. To introduce non-linearity to the operation, a ReLu activation function $f(n) = max(0, n)$ is used on the feature-maps element-wise. The filters in the convolutional layers are trained using a backpropagation algorithm. Intuitively, filters activate when they see different types of visual features, such as vertical or diagonal edges on the lower layers or, in the top convolutional layers, more complex patterns like eyebrows or mouths.
+The convolutional layer is the core building block of a CNN. Each layer is initialized with a set of $n$ random two-dimensional filter matrices (eg 3x3 pixels) and a pixel-stride. When an image is put into the convolutional layer, each of the filters is moved across the height and width of the image, calculating a dot product between the filter matrix and the current section of the image. The resulting matrices of dot products are called feature maps. To introduce non-linearity to the operation, a ReLu activation function $f(n) = max(0, n)$ is used on the feature-maps element-wise. The filters in the convolutional layers are trained using a backpropagation algorithm. Intuitively, filters activate when they see different types of visual features, such as vertical or diagonal edges on the lower layers or, in the top convolutional layers, more complex patterns like eyes or mouths.
 
 \subsubsection{Pooling Layer}
 To progressively reduce dimensionality and computational cost, pooling layers can be found in the computational graph. Similar to the convolutional layer, filters are moved across the layer input, executing a pooling operation on each position. A common pooling operation is taking the max value on every filter position (Max-Pooling). For instance when pooling with a filter size of 3x3 pixels and a stride of 2 is applied to a 48x48 pixels image, the pooling output is a 24x24 pixels image.
