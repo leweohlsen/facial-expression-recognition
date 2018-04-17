@@ -85,7 +85,7 @@
 
 \section{Introduction}
 
-Automatically recognizing facial expressions is an interesting and challenging problem in the fields human computer interaction and artificial emotional intelligence. Facial expressions can be interpreted and categorized into six classes of basic emotion that seem to be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise \cite{ekman93}. This projects goal is to develop a classifier for real-time detection of these facial expressions.
+Automatically recognizing facial expressions is an interesting and challenging problem in the fields human computer interaction and artificial emotional intelligence. Facial expressions can be interpreted and categorized into six classes of basic emotion that seem to be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise \cite{ekman93}. This projects goal is to develop a classifier for real-time detection of these facial expressions. To simplify the process and focus on the main problem, faces are being detected using the OpenCV Haar feature-based cascade classifier \cite{violajones04}.
 
 %------------------------------------------------
 
@@ -147,7 +147,7 @@ In CNNs, fully connected layers are added at the top of the network. The advance
 \section{Model Architecture and Training}
 To effectively reduce dimensions between the input and output space and find a valid representation of the input image, a CNN is implemented using the TensorFlow higher-level APIs. The TensorFlow extimator API provides a convenient abstraction layer by encapsulating trainable classifiers.
 
-In simple CNNs, it is common to combine convolutional and pooling layers to compute feature activations while reducing dimensionality. During the designing process, it turned out that stacking multiple convolutional layers in a VGG-Fashion \cite{simonyan14} improved the model accuracy on the test set by about 20 percent compared to alternating pooling and convolutional layers.
+In simple CNNs, it is common to combine convolutional and pooling layers to compute feature activations while reducing dimensionality. During the designing process, it turned out that stacking multiple convolutional layers in improved the model accuracy on the test set by about 20 percent compared to alternating pooling and convolutional layers.
 
 The model architecture has been improved incrementally throughout the designing process. Hyperparameter optimization has not been done programmatically but rather by trial-and-error.
 
@@ -162,8 +162,7 @@ The CNN is trained on a subset of the FER-dataset according to the original trai
 \section{Discussion and Conclusion}
 
 % - CNN robustness to occlusion, distortions and geometric transformations.
-The final model scored an accuracy of ~75\% on a test-set of 3557 samples. In live predictions with a webcam, the classifier has shown to be surprisingly accurate and is a cool gadget to play around with. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance disgust only has 500 samples while happy has much more. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation could be used: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. For normalizing the images, it is a common practice to subtract the mean pixel intensities over the whole dataset from each picture. Given more time for this project, I would like to have experimented with such techniques of data augmentation. 
-
+The final model scored an accuracy of ~75\% on a test-set of 3557 samples. In live predictions with a webcam, the classifier has shown to be surprisingly accurate and is a cool gadget to play around with. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance disgust only has 500 samples while happy has much more. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation could be used: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. For normalizing the images, it is a common practice to subtract the mean pixel intensities over the whole dataset from each picture. Given more time for this project, I would like to have experimented with such techniques of data augmentation.
 
 
 %----------------------------------------------------------------------------------------
@@ -173,10 +172,7 @@ The final model scored an accuracy of ~75\% on a test-set of 3557 samples. In li
 %\begin{thebibliography}{9}
 %
 %	% OpenCV Haarcascade Classifier
-%	\bibitem{violajones}
-%  	P. A. Viola and M. J. Jones. Robust real-time face detection.
-%	International Journal of Computer Vision
-%	57(2):137–154, 2004.
+
 %
 %	% the ICML 2013 workshop’s facial expression recognition challenge
 %	\bibitem{replearning}
