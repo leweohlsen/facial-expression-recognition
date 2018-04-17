@@ -147,7 +147,7 @@ In CNNs, fully connected layers are added at the top of the network. The advance
 \section{Model Architecture and Training}
 To effectively reduce dimensions between the input and output space and find a valid representation of the input image, a CNN is implemented using the TensorFlow higher-level APIs. The TensorFlow extimator API provides a convenient abstraction layer by encapsulating trainable classifiers.
 
-In simple CNNs, it is common to combine convolutional and pooling layers to compute feature activations while reducing dimensionality. During the designing process, it turned out that stacking multiple convolutional layers in a VGG-Fashion \cite{simonyan14} improved the model accuracy on the test set by about 20 percent compared to alternating pooling and convolutional layers.
+In simple CNNs, it is common to combine convolutional and pooling layers to compute feature activations while reducing dimensionality. During the designing process, it turned out that stacking multiple convolutional layers improved the model accuracy on the test set by about 20 percent compared to alternating pooling and convolutional layers.
 
 The model architecture has been improved incrementally throughout the designing process. Hyperparameter optimization has not been done programmatically but rather by trial-and-error.
 
