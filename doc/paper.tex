@@ -159,7 +159,7 @@ The CNN is trained on a subset of the FER-dataset according to the original trai
 
 %------------------------------------------------
 
-\section{Discussion and Conclusion}
+\section{Conclusion and Discussion}
 
 % - CNN robustness to occlusion, distortions and geometric transformations.
 The final model scored an accuracy of ~75\% on a test-set of 3557 samples. In live predictions with a webcam, the classifier has shown to be surprisingly accurate and is a cool gadget to play around with. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance disgust only has 500 samples while happy has much more. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation could be used: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. For normalizing the images, it is a common practice to subtract the mean pixel intensities over the whole dataset from each picture. Given more time for this project, I would like to have experimented with such techniques of data augmentation. 
