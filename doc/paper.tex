@@ -80,7 +80,7 @@ Automatically recognizing facial expressions is an interesting and challenging p
 %------------------------------------------------
 
 \section{Related work}
-In the last years, great progress was made on the problem of automatically detecting facial expression from images. Some researchers have attempted to derive emotions from detecting individual muscle movements in images of faces by identifying muscles and their degree of activation \cite{lien98}. However, manually extracting the muscle activations from a set of images requires expert knowledge or complex algorithms. With Convolutional Neural Networks (CNNs), training data only consists of images along with matching class labels that describe the images. Relevant features, such as a smile that implies happiness, are learned implicitly and do not require manual extraction. CNNs have been used successfully for various image recognition tasks, including facial expression recognition \cite{dumas01}.
+In the last years, great progress was made on the problem of automatically detecting facial expression from images. Some researchers have attempted to derive emotions from detecting individual muscle movements in images of faces by identifying muscles and their degree of activation \cite{lien98}. However, manually extracting the muscle activations from a set of images requires expert knowledge or complex algorithms. With Convolutional Neural Networks (CNNs), training data only consists of images along with matching class labels that describe the images. Relevant features, such as a smile that implies happiness, are learned implicitly and do not require manual extraction. CNNs have been used successfully for various image recognition tasks, including facial expression recognition \cite{dumas01}. The aim of this work was to test how well multiple CNN models, trained on different datasets, perform together on the task of recognizing facial expressions.
 %------------------------------------------------
 
 \section{Datasets}
@@ -113,7 +113,7 @@ To augment the wild variety of FER-2013 images, a second, more conservative data
 %------------------------------------------------
 
 \section{Convolutional Neural Networks (CNNs)}
-Convolutional Neural Networks are are a special kind of multi-layer artificial neural networks. CNNs have been around since the 1990s \cite{lecun98}, however they have lead to breakthrough results in practical application with computational power becoming more affordable in the last years. Convolutional Neural Networks can recognize visual patterns directly from pixel images with very little preprocessing. 
+Convolutional Neural Networks are a special kind of multi-layer artificial neural networks. CNNs have been around since the 1990s \cite{lecun98}, however they have lead to breakthrough results in practical application with computational power becoming more affordable in the last years. Convolutional Neural Networks can recognize visual patterns directly from pixel images with very little preprocessing. 
 
 Like a regular Artificial Neural Network, a CNN can be thought of as a function $f(x) = y$ where the input $x$ is an image of a face and $y$ is a probability distribution of the classes this image is predicted to belong to (e.g happiness, surprise, sadness). Input images are flattened in dimension from 48x48 pixels to a single 2304-dimensional vector. For training and predictions, multiple images can be fed into the neural network at once.
 
@@ -176,14 +176,34 @@ The model architecture has been improved incrementally throughout the designing 
 
 
 \subsection{Training Procedure}
-The CNN is trained on a subset of the FER-dataset according to the original train-test-validation split with the FERplus prabability distributions as labels. The models filters and weights/biases of the fully connected layers are fit to the training set using a backpropagation algorithm. Therefore, a cross-entropy loss function is used to measure the model error and the Adam optimization algorithm with an initial step size of 0.001 is used to minimize the loss. To prevent overfitting the model on the training set, the loss value on the validation set (unseen data) is computed periodically during training. When the validation loss stops decreasing, training is stopped and the final model accuracy is computed on the test subset.
+The CNN is trained on a subset of 28221 training examples from the FER-dataset according to the original train-test-validation split. The FERplus prabability distributions are used as as labels. In the training subset, only images with a maximum label class probability of $> 0.5$ were considered. The CNN models filters and weights/biases of the fully connected layers are fit to the training set using the backpropagation algorithm. Therefore, a cross-entropy loss function is used to measure the model error and the Adam optimization algorithm with an initial step size of 0.001 is used to minimize the loss. To prevent overfitting the model on the training set, the loss value on the validation set (3532 unseen images) is computed periodically during training. When the validation loss stops decreasing, training is stopped and the final model accuracy is computed on a test subset.
+
+
+%------------------------------------------------
+
+
+\section{Results}
+The final CNN model scored an accuracy of 73.2\% on a test-set of 3482 face examples. Training was executed on a shared Tesla K80 GPU instance by Google Colab \cite{colab}, a cloud powered, interactive Jupyter notebook environment. Training with 24 iterations over the training set (epochs) took about 15 minutes.
+
+\begin{figure}[H]
+	\includegraphics[width=0.48\textwidth]{confusion}
+	\caption{Confusion matrix showing the accuracy for each class}
+\end{figure}
+
+Occlusion bla bla
+
+\begin{figure}[H]
+	\includegraphics[width=0.48\textwidth]{errors}
+	\caption{Examples of wrongly classified images}
+\end{figure}
+
 
 %------------------------------------------------
 
 \section{Conclusion and Discussion}
 
 % - CNN robustness to occlusion, distortions and geometric transformations.
-The final model scored an accuracy of ~75\% on a test-set of 3557 samples. In live predictions with a webcam, the classifier has shown to be accurate in most of the predictions. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance disgust only has about 500 samples while happy has ~7000. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation could be used \cite{krizhevsky12}: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. Given more time for this project, I would like to have experimented with such techniques of data augmentation and also with  more complex model architectures.
+In live predictions with a webcam, the classifier has shown to be accurate in most of the predictions. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance $disgust$ only has about 500 training samples while $happy$ has about 7000. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation \cite{krizhevsky12} could be used: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. Given more time for this project, I would like to have experimented with such techniques of data augmentation and also with more complex model architectures.
 
 
 
