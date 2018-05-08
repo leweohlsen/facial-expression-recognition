@@ -31,6 +31,7 @@
 \usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
 \usepackage{hyperref} % For hyperlinks in the PDF
 \usepackage{cite} % BibTex
+\usepackage[inline]{enumitem} % enumerate
 
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
 
@@ -75,7 +76,15 @@
 
 \section{Introduction}
 
-Automatically recognizing facial expressions is an interesting and challenging problem in the field of human computer interaction. Facial expressions can be interpreted and categorized into six classes of basic emotion that seem to be found across all human cultures: anger, disgust, fear, happiness, sadness, and surprise \cite{ekman93}. This projects goal is to develop a classifier for real-time detection of these facial expressions using deep learning.
+Automatically recognizing facial expressions is an interesting and challenging problem in the field of human computer interaction. Facial expressions can be interpreted and categorized into six classes of basic emotion that seem to be found across all human cultures \cite{ekman93}: 
+\begin{enumerate*}[]
+\item anger
+\item disgust
+\item fear
+\item happiness
+\item sadness and
+\item surprise
+\end{enumerate*}. This projects goal is to develop a classifier for real-time detection of these facial expressions using deep learning.
 
 %------------------------------------------------
 
@@ -95,11 +104,11 @@ To train an automatic classifier using deep learning technology, a dataset with 
 \subsection{FER-2013}
 The FER-2013 dataset consists of roughly 37.000 images showing faces of people expressing a certain emotion. Most of the 48x48 pixel grayscale images are stock footage. All images have been centered on the persons faces to show a similar region in every sample. As this has been done automatically, some images are not centered correctly. Persons are depicted from different camera angles, some faces are occluded and rotation is different across the images. These circumstances make the problem of generalizing on the training data difficult. 
 
-The class labels were crowd-sourced with Amazon Mechanical Turk, where quality work is not incentivized, so faulty labels are likely a problem. It is expected that every subject shows only a single emotion, where in reality faces can express at least two emtions simultaniously (e.g happiness and surprise). To resolve this problem and improve the overall quality of the FER-2013 dataset, a research group at Microsoft worked on re-labeling the dataset \cite{barsoum16}: To get a better approximation of the ground-truth emotions, ten workers on Mechanical Turk were asked to label each image. Instead of single class labels, probability distributions of emotion classes describe each persons facial expression.
+The class labels were crowd-sourced with Amazon Mechanical Turk, where quality work is not incentivized, so faulty labels are likely a problem. It is expected that every subject shows only a single emotion, where in reality faces can express at least two emtions simultaniously (e.g happiness and surprise). To resolve this problem and improve the overall quality of the FER-2013 dataset, a research group at Microsoft created the FERPlus extension \cite{barsoum16} with new labels for the FER-2013 dataset: To get a better approximation of the ground-truth emotions, ten workers on Mechanical Turk were asked to label each image. Instead of single class labels, probability distributions of emotion classes describe each persons facial expression. 
 
 \begin{figure}[H]
 	\includegraphics[width=0.48\textwidth]{ferplus_distribution}
-	\caption{FER-2013 dataset class distribution}
+	\caption{FERPlus dataset class distribution}
 \end{figure}
 
 \subsection{Cohn-Kanade (CK+)}
@@ -176,7 +185,7 @@ The model architecture has been improved incrementally throughout the designing 
 
 
 \subsection{Training Procedure}
-The CNN is trained on a subset of 28221 training examples from the FER-dataset according to the original train-test-validation split. The FERplus prabability distributions are used as as labels. In the training subset, only images with a maximum label class probability of $> 0.5$ were considered. The CNN models filters and weights/biases of the fully connected layers are fit to the training set using the backpropagation algorithm. Therefore, a cross-entropy loss function is used to measure the model error and the Adam optimization algorithm with an initial step size of 0.001 is used to minimize the loss. To prevent overfitting the model on the training set, the loss value on the validation set (3532 unseen images) is computed periodically during training. When the validation loss stops decreasing, training is stopped and the final model accuracy is computed on a test subset.
+The CNN is trained on a subset of 28221 training examples from the FER-dataset according to the original train-test-validation split. The FERplus prabability distributions are used as as labels. In the training subset, only images with a label class probability of $> 0.5$ were considered. The CNN models filters and weights/biases of the fully connected layers are fit to the training set using the backpropagation algorithm. Therefore, a cross-entropy loss function is used to measure the model error and the Adam optimization algorithm with an initial step size of 0.001 is used to minimize the loss. To prevent overfitting the model on the training set, the loss value on the validation set (3532 unseen images) is computed periodically during training. When the validation loss stops decreasing, training is stopped and the final model accuracy is computed on a test subset.
 
 
 %------------------------------------------------
@@ -188,9 +197,10 @@ The final CNN model scored an accuracy of 73.2\% on a test-set of 3482 face exam
 \begin{figure}[H]
 	\includegraphics[width=0.48\textwidth]{confusion}
 	\caption{Confusion matrix showing the accuracy for each class}
+	\label{fig::confusion}
 \end{figure}
 
-Occlusion bla bla
+The classes 3=$happy$ and 6=$neutral$ have a high rate of correctly being identified according to the confusion matrix, whereas 1=$disgust$ and 2=$fear$ are barely recognized.
 
 \begin{figure}[H]
 	\includegraphics[width=0.48\textwidth]{errors}
@@ -203,7 +213,11 @@ Occlusion bla bla
 \section{Conclusion and Discussion}
 
 % - CNN robustness to occlusion, distortions and geometric transformations.
-In live predictions with a webcam, the classifier has shown to be accurate in most of the predictions. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance $disgust$ only has about 500 training samples while $happy$ has about 7000. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation \cite{krizhevsky12} could be used: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. Given more time for this project, I would like to have experimented with such techniques of data augmentation and also with more complex model architectures.
+In live predictions with a webcam, the classifier has shown to be accurate in most of the predictions. However, predictions for the classes $disgust$ and $fear$ are hard to reproduce. This is most likely because the seven classes of emotion in the dataset are highly imbalanced. For instance $disgust$ only has about 500 training samples while $happy$ has about 7000. This results in biased predictions with higher probabilities of the majority classes. In order to balance the training dataset, data augmentation \cite{krizhevsky12} could be used: To increase the number of training examples for a given class, the images could be flipped horizontally or rotated in multiple random angles. 
+
+The examples of wrongly classified images show that especially when facial expressions are not exaggerated or posed, they can be really hard to distinguish and recognize. When trained with a relatively small dataset, CNNs don't seem to be robust against occulsion and geometric transformations.
+
+Given more time for this project, I would like to have experimented with techniques of data augmentation and also with more complex model architectures.
 
 
 
